@@ -108,3 +108,11 @@
                  events)]
     (doseq [event-vector events]
       (apply citrus/dispatch! r event-vector))))
+
+(defn dispatch-sync [r events]
+  (let [events (if (and (vector? events)
+                        (keyword? (first events)))
+                 [events]
+                 events)]
+    (doseq [event-vector events]
+      (apply citrus/dispatch-sync! r event-vector))))

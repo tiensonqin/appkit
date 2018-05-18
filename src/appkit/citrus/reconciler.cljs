@@ -64,7 +64,7 @@
     (let [cname (keyword (namespace event))
           seperate-state? (not= cname :citrus)]
       (if (nil? (get @handler event))
-        (prn {:not-exists-event event}))
+        (.dir js/console {:not-exists-event event}))
 
       (queue-effects!
        queue
@@ -97,7 +97,8 @@
            (reset! state next-state))))))
 
   (dispatch-sync! [this event args]
-    ;; (prn "sync! " event)
+    (if (nil? (get @handler event))
+      (.dir js/console {:not-exists-event event}))
     (let [cname (keyword (namespace event))
           seperate-state? (not= cname :citrus)
           effects (apply (get @handler event)
