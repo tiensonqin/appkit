@@ -22,7 +22,7 @@
 
   Returned value supports deref, watches and metadata.
   The only supported option is `:meta`"
-  [{:keys [state handler effect-handlers batched-updates chunked-updates]} & {:as options}]
+  [{:keys [state handler effect-handlers batched-updates chunked-updates debug?]} & {:as options}]
   (r/Reconciler.
     handler
     effect-handlers
@@ -31,7 +31,8 @@
     (volatile! nil)
     (or batched-updates js/requestAnimationFrame)
     chunked-updates
-    (:meta options)))
+    (:meta options)
+    debug?))
 
 (defn dispatch!
   "Invoke an event on particular controller asynchronously
