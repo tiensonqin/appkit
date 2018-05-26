@@ -1,4 +1,4 @@
-(defproject tiensonqin/appkit "0.1.0-SNAPSHOT"
+(defproject tiensonqin/appkit "0.1.2"
   :description "Kit for development"
   :url "https://github.com/tiensonqin/appkit"
   :license {:name "Eclipse Public License"

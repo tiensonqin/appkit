@@ -17,7 +17,7 @@
   (dispatch! [this event args])
   (dispatch-sync! [this event args]))
 
-(deftype Reconciler [handler effect-handlers state queue scheduled? batched-updates chunked-updates meta]
+(deftype Reconciler [handler effect-handlers state queue scheduled? batched-updates chunked-updates meta debug?]
 
   Object
   (equiv [this other]
@@ -59,8 +59,8 @@
 
   IReconciler
   (dispatch! [this event args]
-    ;; (if (not= event :draw/mouse-move)
-    ;;   (prn "async! " event))
+    (when debug? (prn "async! " {:event event
+                                 :args args}))
     (let [cname (keyword (namespace event))
           seperate-state? (not= cname :citrus)]
       (if (nil? (get @handler event))
@@ -97,6 +97,8 @@
            (reset! state next-state))))))
 
   (dispatch-sync! [this event args]
+    (when debug? (prn "sync! " {:event event
+                                :args args}))
     (if (nil? (get @handler event))
       (.dir js/console {:not-exists-event event}))
     (let [cname (keyword (namespace event))

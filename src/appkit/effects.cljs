@@ -55,7 +55,7 @@
                        :on-error (fn [{:keys [status] :as resp}]
                                    (cond
                                      (= status 401)
-                                     (citrus/dispatch! r :router/push {:handler :login} true)
+                                     (citrus/dispatch! r :user/show-signin-modal?)
 
                                      :else
                                      (if (vector? on-error)

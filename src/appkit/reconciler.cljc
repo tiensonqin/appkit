@@ -22,7 +22,7 @@
 ;; used by appkit.citrus
 (def reconciler-inner (atom nil))
 
-(defn reconciler [handler api-host cookie-opts]
+(defn reconciler [handler api-host cookie-opts debug?]
   (let [r #?(:clj
              (citrus/reconciler
                {:state     (atom {})})
@@ -30,6 +30,7 @@
              (citrus/reconciler
                {:state           db/state
                 :handler         handler
-                :effect-handlers (effect-handlers api-host cookie-opts)}))]
+                :effect-handlers (effect-handlers api-host cookie-opts)
+                :debug? debug?}))]
     (reset! reconciler-inner r)
     r))
