@@ -82,6 +82,17 @@
   (when-let [old (storage/get key)]
     (storage/set key (vec (remove #(= % value) old)))))
 
+(defmethod local-storage :assoc [_ {:keys [key assoc-key assoc-value]}]
+  (when-let [old (storage/get key)]
+    (when (or (nil? old)
+              (map? old))
+      (storage/set key (assoc old assoc-key assoc-value)))))
+
+(defmethod local-storage :dissoc [_ {:keys [key assoc-key]}]
+  (when-let [old (storage/get key)]
+    (when (map? old)
+      (storage/set key (dissoc old assoc-key)))))
+
 (defmethod local-storage :remove [_ {:keys [key]}]
   (storage/remove key))
 
