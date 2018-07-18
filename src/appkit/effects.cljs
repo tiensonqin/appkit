@@ -83,7 +83,7 @@
     (storage/set key (vec (remove #(= % value) old)))))
 
 (defmethod local-storage :assoc [_ {:keys [key assoc-key assoc-value]}]
-  (when-let [old (storage/get key)]
+  (let [old (storage/get key)]
     (when (or (nil? old)
               (map? old))
       (storage/set key (assoc old assoc-key assoc-value)))))
