@@ -4,7 +4,8 @@
             [appkit.storage :as storage]
             [appkit.cookie :as cookie]
             [goog.net.cookies]
-            [clojure.string :as str]))
+            [clojure.string :as str]
+            [appkit.promise :as p]))
 
 (defmulti dispatch! (fn [_ effect]
                       (type effect)))
@@ -121,3 +122,11 @@
                  events)]
     (doseq [event-vector events]
       (apply citrus/dispatch! r event-vector))))
+
+(defn promise
+  [r {:keys [p on-fulfilled on-rejected]}]
+  (-> (p)
+      (p/then (fn [result]
+                (apply citrus/dispatch! r (conj on-fulfilled result))))
+      (p/catch (fn [err]
+                 (apply citrus/dispatch! r (conj on-rejected err))))))
