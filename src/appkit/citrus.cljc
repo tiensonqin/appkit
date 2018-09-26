@@ -3,6 +3,8 @@
             [appkit.reconciler :as r]
             [rum.core :as rum]))
 
+;; copied from https://github.com/roman01la/citrus
+
 (defn dispatch!
   "Invoke an event on particular controller asynchronously
 

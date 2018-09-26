@@ -1,6 +1,8 @@
 (ns appkit.citrus.cursor
   (:require [goog.object :as gobj]))
 
+;; copied from https://github.com/roman01la/citrus
+
 (deftype ReduceCursor [ref path reducer meta]
   Object
   (equiv [this other]

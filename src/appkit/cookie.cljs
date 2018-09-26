@@ -12,7 +12,7 @@
   (.get goog.net.cookies (as-key k)))
 
 (defn cookie-set [k v]
-  (.set goog.net.cookies k v))
+  (.set goog.net.cookies (as-key k) v))
 
 (defn cookie-set-forever [k v {:keys [expire domain]
                                :or {expire (* 2 365 24 3600)}

@@ -3,6 +3,8 @@
             [clojure.set :as set]
             [clojure.walk :as w]))
 
+;; copy from https://github.com/priornix/antizer/blob/35ba264cf48b84e6597743e28b3570d8aa473e74/src/antizer/core.cljs
+
 (defn kebab-case->camel-case
   "Converts from kebab case to camel case, eg: on-click to onClick"
   [input]

@@ -16,7 +16,6 @@
             :cookie        (partial effects/cookie cookie-opts)
             :redirect      effects/redirect
             :dispatch      effects/dispatch
-            :dispatch-sync effects/dispatch-sync
             :timeout       effects/timeout})))
 
 ;; used by appkit.citrus

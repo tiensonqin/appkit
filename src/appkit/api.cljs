@@ -33,9 +33,11 @@
 
 (defn from-transit
   "Deserialization for clojure data."
-  [in]
+  [in keywordize?]
   (let [reader (t/reader :json)]
-    (walk/keywordize-keys (t/read reader in))))
+    (cond-> (t/read reader in)
+        keywordize?
+        (walk/keywordize-keys))))
 
 (defn from-json
   [in]
@@ -60,10 +62,12 @@
     {}))
 
 (defn fetch [api-host {:keys [endpoint params method type headers token on-success on-error
-                              on-progress on-upload on-download]
+                              on-progress on-upload on-download
+                              keywordize?]
                        :or {method :post
                             type   :transit
-                            endpoint nil}
+                            endpoint nil
+                            keywordize? true}
                        :as args}]
   (let [xhr (XhrIo.)
         ;; (doto (XhrIo.)
@@ -93,7 +97,7 @@
                      (let [target ^js (.-target e)
                            response {:status (.getStatus target)
                                      :success (.isSuccess target)
-                                     :body (from-transit (.getResponseText target))
+                                     :body (from-transit (.getResponseText target) keywordize?)
                                      :headers (parse-headers (.getAllResponseHeaders target))
                                      :error-code (error-kw (.getLastErrorCode target))
                                      :error-text (.getLastError target)}]

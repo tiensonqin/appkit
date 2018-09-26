@@ -31,13 +31,14 @@
 ;; http ==========================================================
 (def refresh-times (atom 0))
 (defn http [api-host r {:keys [endpoint params on-load on-error method type headers
-                               on-progress on-upload on-download]
+                               on-progress on-upload on-download keywordize?]
                         :or {method :post
                              type :transit
                              on-error :citrus/default-error
                              on-progress nil
                              on-upload nil
                              on-download nil
+                             keywordize? true
                              }
                         :as options}]
   (api/fetch api-host {:endpoint endpoint
@@ -48,6 +49,7 @@
                        :on-progress on-progress
                        :on-upload on-upload
                        :on-download on-download
+                       :keywordize? keywordize?
                        :on-success (fn [result]
                                      (if (vector? on-load)
                                        (apply dispatch! r (conj on-load result))
@@ -119,11 +121,3 @@
                  events)]
     (doseq [event-vector events]
       (apply citrus/dispatch! r event-vector))))
-
-(defn dispatch-sync [r events]
-  (let [events (if (and (vector? events)
-                        (keyword? (first events)))
-                 [events]
-                 events)]
-    (doseq [event-vector events]
-      (apply citrus/dispatch-sync! r event-vector))))

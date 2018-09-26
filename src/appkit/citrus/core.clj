@@ -1,6 +1,8 @@
 (ns appkit.citrus.core
   (:require [appkit.citrus.resolver :as r]))
 
+;; copied from https://github.com/roman01la/citrus
+
 (defn reconciler
   "Accepts a hash of `:state` atom & `:resolvers` hash of subscription resolvers where keys are subscription path vectors and values are data resolving functions
 

@@ -1,5 +1,7 @@
 (ns appkit.citrus.resolver)
 
+;; copied from https://github.com/roman01la/citrus
+
 (deftype Resolver [state path reducer]
 
   clojure.lang.IDeref

@@ -1,6 +1,8 @@
 (ns appkit.citrus.macros
   (:refer-clojure :exclude [doseq]))
 
+;; copied from https://github.com/roman01la/citrus
+
 (defmacro doseq
   "Lightweight `doseq`"
   [[item coll] & body]

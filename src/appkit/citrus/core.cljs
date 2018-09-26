@@ -2,6 +2,8 @@
   (:require [appkit.citrus.reconciler :as r]
             [appkit.citrus.cursor :as c]))
 
+;; copied from https://github.com/roman01la/citrus
+
 (defn reconciler
   "Creates an instance of Reconciler
 
@@ -23,16 +25,26 @@
   Returned value supports deref, watches and metadata.
   The only supported option is `:meta`"
   [{:keys [state handler effect-handlers batched-updates chunked-updates debug?]} & {:as options}]
-  (r/Reconciler.
-    handler
-    effect-handlers
-    state
-    (volatile! [])
-    (volatile! nil)
-    (or batched-updates js/requestAnimationFrame)
-    chunked-updates
-    (:meta options)
-    debug?))
+  (binding []
+    (let [watch-fns (volatile! {})
+          rec (r/Reconciler.
+               handler
+               effect-handlers
+               state
+               (volatile! [])
+               (volatile! nil)
+               (or batched-updates js/requestAnimationFrame)
+               chunked-updates
+               (:meta options)
+               debug?
+               watch-fns)]
+      (add-watch state (list rec :watch-fns)
+                 (fn [_ _ oldv newv]
+                   (when (not= oldv newv)
+                     (doseq [w @watch-fns]
+                       (let [[k watch-fn] w]
+                         (watch-fn k rec oldv newv))))))
+      rec)))
 
 (defn dispatch!
   "Invoke an event on particular controller asynchronously

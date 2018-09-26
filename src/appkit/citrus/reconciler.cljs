@@ -1,6 +1,8 @@
 (ns appkit.citrus.reconciler
   (:require-macros [appkit.citrus.macros :as m]))
 
+;; copied from https://github.com/roman01la/citrus
+
 (defn- queue-effects! [queue f]
   (vswap! queue conj f))
 
@@ -17,7 +19,7 @@
   (dispatch! [this event args])
   (dispatch-sync! [this event args]))
 
-(deftype Reconciler [handler effect-handlers state queue scheduled? batched-updates chunked-updates meta debug?]
+(deftype Reconciler [handler effect-handlers state queue scheduled? batched-updates chunked-updates meta debug? watch-fns]
 
   Object
   (equiv [this other]
@@ -38,14 +40,11 @@
 
   IWatchable
   (-add-watch [this key callback]
-    (add-watch state (list this key)
-               (fn [_ _ oldv newv]
-                 (when (not= oldv newv)
-                   (callback key this oldv newv))))
+    (vswap! watch-fns assoc key callback)
     this)
 
   (-remove-watch [this key]
-    (remove-watch state (list this key))
+    (vswap! watch-fns dissoc key)
     this)
 
   IHash
